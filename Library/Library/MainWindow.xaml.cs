@@ -26,26 +26,52 @@ namespace Library
             InitializeComponent();
         }
 
-        private void Window_Loaded_1(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            combobox.ItemsSource = db.Authors;
-            combobox.DisplayMemberPath = "FirstName";
-            combobox.SelectedIndex = 0;
-        }
 
-        private void combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+          //  ApplicationCommands Chose = new ApplicationCommands();
+ 
+            //this.CommandBindings.Add( new CommandBinding(ApplicationCommands.New, MenuBooks_Click));
+            //ApplicationCommands.a
+            //InputGestureCollection inputs = new InputGestureCollection();
+            //inputs.Add(new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl+E"));
+
+            //RoutedCommand cmd = new RoutedCommand();
             
-            dg.ItemsSource = (this.combobox.SelectedItem as Authors).Books;
 
-            DataGridComboBoxColumn dgc = new DataGridComboBoxColumn();
-            dgc.DisplayMemberPath = "LastName";
-         //   dgc.ItemStringForma = "";
-            dgc.ItemsSource = db.Authors;
-            dgc.Header = "Test";
-            dgc.SelectedItemBinding = new Binding("Authors");
-            dg.Columns.Add(dgc);
+            RoutedUICommand uicmd = new RoutedUICommand("MyCommand","MyCommand",typeof(ApplicationCommands));
+            MenuCatalogs.CommandBindings.Add(new CommandBinding(uicmd, MenuCatalogss_Click));
+
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Books", Command = uicmd, CommandParameter = db.Books});
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Themes", Command = uicmd, CommandParameter = db.Themes });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Authors", Command = uicmd, CommandParameter = db.Authors });
         }
+
+        private void MenuCatalogss_Click(object sender, RoutedEventArgs e)
+        {
+            object Param = (e.Source as MenuItem).CommandParameter;
+            datagrid.ItemsSource = (Param as System.Collections.IEnumerable);
+        }
+
+        //private void MenuBooks_Click(object sender, RoutedEventArgs e)
+        //{
+        //    datagrid.ItemsSource = db.Books;
+        //}
+
+        //private void MenuAuthors_Click(object sender, RoutedEventArgs e)
+        //{
+        //    datagrid.ItemsSource = db.Authors;
+        //}
+
+        //private void MenuThemes_Click(object sender, RoutedEventArgs e)
+        //{
+        //    datagrid.ItemsSource = db.Themes;
+        //}
+
+        //private void MenuCategories_Click(object sender, RoutedEventArgs e)
+        //{
+        //    datagrid.ItemsSource = db.Categories;
+        //}
 
 
     }
