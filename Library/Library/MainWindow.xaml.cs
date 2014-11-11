@@ -29,50 +29,65 @@ namespace Library
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-          //  ApplicationCommands Chose = new ApplicationCommands();
- 
-            //this.CommandBindings.Add( new CommandBinding(ApplicationCommands.New, MenuBooks_Click));
-            //ApplicationCommands.a
-            //InputGestureCollection inputs = new InputGestureCollection();
-            //inputs.Add(new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl+E"));
-
-            //RoutedCommand cmd = new RoutedCommand();
-            
-
             RoutedUICommand uicmd = new RoutedUICommand("MyCommand","MyCommand",typeof(ApplicationCommands));
             MenuCatalogs.CommandBindings.Add(new CommandBinding(uicmd, MenuCatalogss_Click));
 
+
             MenuCatalogs.Items.Add(new MenuItem() { Header = "Books", Command = uicmd, CommandParameter = db.Books});
             MenuCatalogs.Items.Add(new MenuItem() { Header = "Themes", Command = uicmd, CommandParameter = db.Themes });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Categories", Command = uicmd, CommandParameter = db.Categories });
+            MenuCatalogs.Items.Add(new Separator());
+
             MenuCatalogs.Items.Add(new MenuItem() { Header = "Authors", Command = uicmd, CommandParameter = db.Authors });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Press", Command = uicmd, CommandParameter = db.Press });
+            MenuCatalogs.Items.Add(new Separator());
+
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Students", Command = uicmd, CommandParameter = db.Students });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Teachers", Command = uicmd, CommandParameter = db.Teachers });
+            MenuCatalogs.Items.Add(new Separator());
+
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Groups", Command = uicmd, CommandParameter = db.Groups });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Faculties", Command = uicmd, CommandParameter = db.Faculties });
+            MenuCatalogs.Items.Add(new MenuItem() { Header = "Departments", Command = uicmd, CommandParameter = db.Departments });
+
+           
+            //TextBlock tb = new TextBlock(){Text="{Binding Score}"};
+            //Binding bind = new Binding();
+            //bind.Path = new PropertyPath("Name");
+            //tb.SetBinding(TextBlock.TextProperty, bind);
+            
+            //DataTemplate dt = new DataTemplate();
+            //dt.VisualTree = tb;
+            //Departments;
         }
 
         private void MenuCatalogss_Click(object sender, RoutedEventArgs e)
         {
             object Param = (e.Source as MenuItem).CommandParameter;
-            datagrid.ItemsSource = (Param as System.Collections.IEnumerable);
+            IQueryable enumerator = (Param as IQueryable);
+
+            datagrid.ItemsSource = enumerator;
+            datagrid.AutoGenerateColumns = false;
+            datagrid.Columns.Clear();
+
+            foreach (var item in enumerator.ElementType.GetProperties())
+            {
+                if (!item.Name.Contains("Id_")) // Исключим ИД
+                {
+                    if (item.PropertyType.IsValueType || item.PropertyType == typeof(string))
+                        datagrid.Columns.Add(new DataGridTextColumn() { Header = item.Name, Binding = new Binding(item.Name) });
+                    
+                  //  else
+                 //       datagrid.Columns.Add(new DataGridComboBoxColumn() { Header = item.Name, ItemsSource = db.Authors, SelectedItemBinding = new Binding(item.Name) });
+                }
+                
+
+            }
+            //Binding bind = new Binding("Id");
+            //datagrid.Columns.Add(new DataGridTextColumn() { Header = "Test",Binding= new Binding("Id") });
+            
         }
 
-        //private void MenuBooks_Click(object sender, RoutedEventArgs e)
-        //{
-        //    datagrid.ItemsSource = db.Books;
-        //}
-
-        //private void MenuAuthors_Click(object sender, RoutedEventArgs e)
-        //{
-        //    datagrid.ItemsSource = db.Authors;
-        //}
-
-        //private void MenuThemes_Click(object sender, RoutedEventArgs e)
-        //{
-        //    datagrid.ItemsSource = db.Themes;
-        //}
-
-        //private void MenuCategories_Click(object sender, RoutedEventArgs e)
-        //{
-        //    datagrid.ItemsSource = db.Categories;
-        //}
-
-
+      
     }
 }
