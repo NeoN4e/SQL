@@ -75,7 +75,7 @@ namespace Library
                 if (!item.Name.Contains("Id_")) // Исключим ИД
                 {
                     if (item.PropertyType.IsValueType || item.PropertyType == typeof(string))
-                        datagrid.Columns.Add(new DataGridTextColumn() { Header = item.Name, Binding = new Binding(item.Name) });
+                        datagrid.Columns.Add(new DataGridTextColumn() { Header = item.Name, Binding = new Binding(item.Name),IsReadOnly=true });
                     
                   //  else
                  //       datagrid.Columns.Add(new DataGridComboBoxColumn() { Header = item.Name, ItemsSource = db.Authors, SelectedItemBinding = new Binding(item.Name) });
@@ -87,6 +87,14 @@ namespace Library
             //datagrid.Columns.Add(new DataGridTextColumn() { Header = "Test",Binding= new Binding("Id") });
             
         }
+
+        private void datagrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Edit editWindow = new Edit( (sender as DataGrid).CurrentItem );
+            editWindow.ShowDialog();
+        }
+
+ 
 
       
     }

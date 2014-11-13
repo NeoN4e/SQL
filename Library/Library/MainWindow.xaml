@@ -15,9 +15,7 @@
             </MenuItem>
             <MenuItem x:Name="MenuCatalogs" Header="Catalogs"/>
         </Menu>
-        <DataGrid x:Name="datagrid" Margin="10,29,10,10" DisplayMemberPath="Name">
-          
-        </DataGrid>
+        <DataGrid x:Name="datagrid" Margin="10,29,10,10" DisplayMemberPath="Name" IsTextSearchEnabled="True" MouseDoubleClick="datagrid_MouseDoubleClick"  />
 
     </Grid>
 </Window>
