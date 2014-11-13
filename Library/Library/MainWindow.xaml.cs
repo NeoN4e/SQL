@@ -72,13 +72,14 @@ namespace Library
 
             foreach (var item in enumerator.ElementType.GetProperties())
             {
-                if (!item.Name.Contains("Id_")) // Исключим ИД
+                if (!item.Name.Contains("_")) // Исключим ИД
                 {
-                    if (item.PropertyType.IsValueType || item.PropertyType == typeof(string))
-                        datagrid.Columns.Add(new DataGridTextColumn() { Header = item.Name, Binding = new Binding(item.Name),IsReadOnly=true });
-                    
-                  //  else
-                 //       datagrid.Columns.Add(new DataGridComboBoxColumn() { Header = item.Name, ItemsSource = db.Authors, SelectedItemBinding = new Binding(item.Name) });
+                    //if (item.PropertyType.IsValueType || item.PropertyType == typeof(string))
+                        datagrid.Columns.Add(new DataGridTextColumn() { Header = item.Name, Binding = new Binding(item.Name), IsReadOnly = true });
+
+                    //else
+                        //datagrid.Columns.Add(new DataGridComboBoxColumn() { Header = item.Name, ItemsSource = db.Authors, SelectedItemBinding = new Binding(item.Name) });
+                        
                 }
                 
 

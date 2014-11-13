@@ -31,37 +31,62 @@ namespace Library
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            #region Заполнение
             int row = 0;
             foreach (System.Reflection.PropertyInfo property in this.edititem.GetType().GetProperties())
             {
 
-                if (!property.Name.Contains("Id_")) // Исключим ИД
+                if (!property.Name.Contains("_")) // Исключим ИД
                 {
-                    //1-я колонка
-                    this.MainGrid.RowDefinitions.Add(new RowDefinition());
+                    //Добавим строку
+                    this.DataGrid.RowDefinitions.Add(new RowDefinition());
 
+                    //1-я колонка
                     TextBlock tbl = new TextBlock() { Text = property.Name + ":", Margin = new Thickness(5), FontWeight = FontWeights.Bold, VerticalAlignment = System.Windows.VerticalAlignment.Center };
                     
                     Grid.SetColumn(tbl, 0);
                     Grid.SetRow(tbl, row);
-                    this.MainGrid.Children.Add(tbl);
+                    this.DataGrid.Children.Add(tbl);
                     
                     //2-я колонка со значениями
-                    FrameworkElement valueBox;
+                    //FrameworkElement valueBox;
+                    TextBox valueBox = new TextBox() { Margin = new Thickness(3), VerticalAlignment = System.Windows.VerticalAlignment.Center };
 
-                    //if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
-                        valueBox = new TextBox() { Text = property.GetValue(this.edititem).ToString() };
-                    //else
-                    //    valueBox = new ComboBox() { SelectedItem = property.GetValue(this.edititem) };
+                    
+                    if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
+                    {
+                        //Для значимых отобразим само значение
+                        valueBox.Text = property.GetValue(this.edititem).ToString();
+                    }
+                    else
+                    {
+                        //Для ссылочных Получим Значение поля НАМЕ
+                        valueBox.Text = StaticFunction.GetStringValue(property.GetValue(this.edititem));
+                        valueBox.IsReadOnly = true;
 
-                    valueBox.Margin = new Thickness(3);
-                    valueBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                        //Добавим Кнопочку выбора
+                        Button bt = new Button() { Content = "...", Height = 20 };
+                        Grid.SetColumn(bt, 3);
+                        Grid.SetRow(bt, row);
+                        this.DataGrid.Children.Add(bt);
+                    }
+
+                    //Создадим темплате для Автор
+                    DataTemplate dtAutors = new DataTemplate(typeof(Authors));
 
                     Grid.SetColumn(valueBox, 1);
                     Grid.SetRow(valueBox, row++);
-                    this.MainGrid.Children.Add(valueBox);
+                    this.DataGrid.Children.Add(valueBox);
                 }
             }
+            #endregion
+
+
+        }
+
+        private void Button_Close(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
